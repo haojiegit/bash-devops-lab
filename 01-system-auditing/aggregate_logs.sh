@@ -22,7 +22,7 @@ fi
 #Temporary Directory & Trap Setup 
 tmp_dir=$(mktemp -d /tmp/log_agg.XXXXXX) 
  
-trap "rm -rf $tmp_dir" EXIT INT TERM 
+trap "rm -rf $tmp_dir" EXIT 
  
 #Find all regular files in "$1" ending in ".log" and copy them into "$tmp_dir/" 
 find "$1" -type f -name "*.log" -exec cp -p "{}" "$tmp_dir" \; 2>/dev/null 
