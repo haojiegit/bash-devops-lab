@@ -16,7 +16,6 @@ Production-grade Bash scripts for Linux system administration, security auditing
 
 ---
 
-## Repository Structure
 ## Repository Structure & Script Catalog
 
 | Category | Script | Description | Exit Codes |
@@ -24,6 +23,7 @@ Production-grade Bash scripts for Linux system administration, security auditing
 | **System Auditing** | [`aggregate_logs.sh`](01-system-auditing/aggregate_logs.sh) | Stages active `.log` files in a isolated `mktemp` workspace and concatenates them into a single archive. Features automated `trap` cleanup. | `0` = Success<br>`1` = Invalid Dir<br>`2` = No Logs |
 | **System Auditing** | [`check_filesystem.sh`](01-system-auditing/check_filesystem.sh) | Audits mount point disk space against configurable percentage thresholds using portable POSIX `df -P` parsing. | `0` = OK<br>`1` = Invalid Arg<br>`2` = Critical |
 | **System Auditing** | [`check_node_status.sh`](01-system-auditing/check_node_status.sh) | Validates dependency on `jq` and evaluates cluster node health from structured JSON status files (`/etc/node_info.json`). | `0` = Healthy<br>`1` = Error/Missing `jq`<br>`2` = Unhealthy |
+| **System Auditing** | [`check_web_endpoint.sh`](01-system-auditing/check_web_endpoint.sh) | Queries HTTP/HTTPS endpoints using `curl` with connection timeout limits and validates HTTP status codes against target expectations. | `0` = OK<br>`1` = Error/Missing `curl`<br>`2` = Endpoint Failed |
 
 ---
 
@@ -40,5 +40,5 @@ Production-grade Bash scripts for Linux system administration, security auditing
    ```
 3. Run an audit check (example):
    ```bash
-    ./01-system-auditing/check_filesystem.sh / 80
+   ./01-system-auditing/check_web_endpoint.sh [https://httpbin.org/status/200](https://httpbin.org/status/200) 200
    ```
