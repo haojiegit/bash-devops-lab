@@ -25,7 +25,7 @@ Production-grade Bash scripts for Linux system administration, security auditing
 | **System Auditing** | [`check_node_status.sh`](01-system-auditing/check_node_status.sh) | Validates dependency on `jq` and evaluates cluster node health from structured JSON status files (`/etc/node_info.json`). | `0` = Healthy<br>`1` = Error/Missing `jq`<br>`2` = Unhealthy |
 | **System Auditing** | [`check_web_endpoint.sh`](01-system-auditing/check_web_endpoint.sh) | Queries HTTP/HTTPS endpoints using `curl` with connection timeout limits and validates HTTP status codes against target expectations. | `0` = OK<br>`1` = Error/Missing `curl`<br>`2` = Endpoint Failed |
 | **System Auditing** | [`check_services.sh`](01-system-auditing/check_services.sh) | Audits systemd unit health for user-supplied positional arguments or defaults to core system daemons (`sshd`, `chronyd`). | `0` = All Operational<br>`2` = Audit Failed |
-
+| **System Auditing** | [`audit_permissions.sh`](01-system-auditing/audit_permissions.sh) | Scans target directories for risky world-writable files (`-perm -002`) using process substitution and `IFS=` line reading. | `0` = Secure<br>`1` = Invalid Dir<br>`2` = Vulnerabilities Found |
 ---
 
 ## Quick Start
@@ -41,5 +41,5 @@ Production-grade Bash scripts for Linux system administration, security auditing
    ```
 3. Run an audit check (example):
    ```bash
-   ./01-system-auditing/check_services.sh sshd chronyd firewalld
+   ./01-system-auditing/audit_permissions.sh /usr/local/bin
    ```
