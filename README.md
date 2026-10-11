@@ -9,10 +9,11 @@ Production-grade Bash scripts for Linux system administration, security auditing
 * **Strict Execution Mode:** Mandatory use of `set -euo pipefail` for immediate error trapping and pipeline failure propagation.
 * **Safe Workspaces:** Secure temporary file generation using `mktemp -d` and guaranteed cleanup via `trap` signal handlers.
 * **Structured Data Handling:** Native JSON parsing with `jq` to ensure safe, schema-aware data extraction.
+* **Concurrency Control:** Kernel-enforced non-blocking file locking using `flock` to eliminate race conditions.
 * **Standardized Status Codes:** Consistent exit codes across all utilities:
-  * `0` = Success / Healthy / Within Threshold
-  * `1` = Invalid Input / Usage Error / Missing Dependency
-  * `2` = Threshold Exceeded / Unhealthy State
+  * `0` = Success / Healthy / Within Threshold / Secure / Lock Acquired
+  * `1` = Invalid Input / Usage Error / Missing Dependency / Concurrency Lock Failed
+  * `2` = Threshold Exceeded / Unhealthy State / Service Down / Vulnerability Found
 
 ---
 
@@ -26,6 +27,8 @@ Production-grade Bash scripts for Linux system administration, security auditing
 | **System Auditing** | [`check_web_endpoint.sh`](01-system-auditing/check_web_endpoint.sh) | Queries HTTP/HTTPS endpoints using `curl` with connection timeout limits and validates HTTP status codes against target expectations. | `0` = OK<br>`1` = Error/Missing `curl`<br>`2` = Endpoint Failed |
 | **System Auditing** | [`check_services.sh`](01-system-auditing/check_services.sh) | Audits systemd unit health for user-supplied positional arguments or defaults to core system daemons (`sshd`, `chronyd`). | `0` = All Operational<br>`2` = Audit Failed |
 | **System Auditing** | [`audit_permissions.sh`](01-system-auditing/audit_permissions.sh) | Scans target directories for risky world-writable files (`-perm -002`) using process substitution and `IFS=` line reading. | `0` = Secure<br>`1` = Invalid Dir<br>`2` = Vulnerabilities Found |
+| **System Auditing** | [`run_exclusive_task.sh`](01-system-auditing/run_exclusive_task.sh) | Enforces exclusive execution using kernel-managed file locking (`flock -n`) bound to a file descriptor to prevent race conditions. | `0` = Lock Acquired<br>`1` = Already Running |
+
 ---
 
 ## Quick Start
@@ -41,5 +44,5 @@ Production-grade Bash scripts for Linux system administration, security auditing
    ```
 3. Run an audit check (example):
    ```bash
-   ./01-system-auditing/audit_permissions.sh /usr/local/bin
+   ./01-system-auditing/run_exclusive_task.sh
    ```
