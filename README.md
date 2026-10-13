@@ -11,6 +11,7 @@ Production-grade Bash scripts for Linux system administration, security auditing
 * **Structured Data Handling:** Native JSON parsing with `jq` to ensure safe, schema-aware data extraction.
 * **Concurrency Control:** Kernel-enforced non-blocking file locking using `flock` to eliminate race conditions.
 * **Parallel Processing:** Asynchronous job spawning via background subshells (`&`) and synchronization using `wait` for maximum batch performance.
+* **Secure Configuration Parsing:** Line-by-line file parsing without `source` execution to completely prevent arbitrary code injection vulnerabilities.
 * **Standardized Status Codes:** Consistent exit codes across all utilities:
   * `0` = Success / Healthy / Within Threshold / Secure / Lock Acquired / Parallel Audit Complete
   * `1` = Invalid Input / Usage Error / Missing Dependency / Concurrency Lock Failed
@@ -30,6 +31,7 @@ Production-grade Bash scripts for Linux system administration, security auditing
 | **System Auditing** | [`audit_permissions.sh`](01-system-auditing/audit_permissions.sh) | Scans target directories for risky world-writable files (`-perm -002`) using process substitution and `IFS=` line reading. | `0` = Secure<br>`1` = Invalid Dir<br>`2` = Vulnerabilities Found |
 | **System Auditing** | [`run_exclusive_task.sh`](01-system-auditing/run_exclusive_task.sh) | Enforces exclusive execution using kernel-managed file locking (`flock -n`) bound to a file descriptor to prevent race conditions. | `0` = Lock Acquired<br>`1` = Already Running |
 | **System Auditing** | [`check_endpoints_parallel.sh`](01-system-auditing/check_endpoints_parallel.sh) | Audits multiple HTTP endpoints concurrently using background subshell execution (`&`) and synchronized with `wait`. | `0` = Parallel Complete |
+| **System Auditing** | [`parse_config.sh`](01-system-auditing/parse_config.sh) | Safely parses key-value pairs from configuration files line-by-line without executing code, eliminating `source` injection vulnerabilities. | `0` = Success<br>`1` = Invalid Input |
 
 ---
 
@@ -46,5 +48,5 @@ Production-grade Bash scripts for Linux system administration, security auditing
    ```
 3. Run an audit check (example):
    ```bash
-   ./01-system-auditing/check_endpoints_parallel.sh [https://httpbin.org/status/200](https://httpbin.org/status/200) [https://httpbin.org/status/404](https://httpbin.org/status/404)
+   ./01-system-auditing/parse_config.sh /tmp/sample.conf
    ```
